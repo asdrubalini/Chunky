@@ -1,6 +1,10 @@
 package com.unixlike.chunky.blocks;
 
-import com.unixlike.chunky.storage.ChunkLoaderPosition;
+import java.util.logging.Logger;
+
+import com.unixlike.chunky.Chunky;
+import com.unixlike.chunky.storage.ChunkLoaderFile;
+import com.unixlike.chunky.storage.ChunkLoaderFiles;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -15,6 +19,8 @@ import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.ToolType;
 
 public class ChunkLoaderBlock extends Block {
+    private static Logger logger;
+
     public ChunkLoaderBlock() {
         super(Block.Properties
             .create(Material.IRON)
@@ -23,6 +29,8 @@ public class ChunkLoaderBlock extends Block {
             .harvestLevel(1)
             .harvestTool(ToolType.PICKAXE)
         );
+
+        logger = Logger.getLogger(Chunky.MOD_ID);
     }
 
     @Override
@@ -35,9 +43,11 @@ public class ChunkLoaderBlock extends Block {
             int chunkZ = pos.getZ() >> 4;
             world.forceChunk(chunkX, chunkZ, true);
 
-            ChunkLoaderPosition.addChunk(chunkX, chunkZ);
+            String dimension = world.getDimensionKey().getLocation().getPath();
+            ChunkLoaderFile chunkLoaderFile = ChunkLoaderFiles.getChunkLoaderFile(dimension);
+            chunkLoaderFile.addToAddQueque(chunkX, chunkZ);
 
-            System.out.format("Now loading chunk x = %d and z = %d\n", chunkX, chunkZ);
+            logger.info(String.format("Now loading chunk x = %d and z = %d\n", chunkX, chunkZ));
         }
     }
 
@@ -51,9 +61,11 @@ public class ChunkLoaderBlock extends Block {
             int chunkZ = pos.getZ() >> 4;
             world.forceChunk(chunkX, chunkZ, false);
 
-            ChunkLoaderPosition.removeChunk(chunkX, chunkZ);
+            String dimension = world.getDimensionKey().getLocation().getPath();
+            ChunkLoaderFile chunkLoaderFile = ChunkLoaderFiles.getChunkLoaderFile(dimension);
+            chunkLoaderFile.addToRemoveQueque(chunkX, chunkZ);
     
-            System.out.format("Now unloading chunk x = %d and z = %d\n", chunkX, chunkZ);
+            logger.info(String.format("Now unloading chunk x = %d and z = %d\n", chunkX, chunkZ));
         }
     }
 }

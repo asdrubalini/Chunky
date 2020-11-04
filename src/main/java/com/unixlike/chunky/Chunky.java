@@ -12,8 +12,8 @@ import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
-import com.unixlike.chunky.data.ChunkCoordinates;
-import com.unixlike.chunky.storage.ChunkLoaderPosition;
+import com.unixlike.chunky.storage.ChunkLoaderFiles;
+import com.unixlike.chunky.storage.ChunkLoaderFile;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -31,7 +31,7 @@ public class Chunky {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::doClientStuff);
 
         MinecraftForge.EVENT_BUS.addListener(this::onWorldLoaded);
-        // MinecraftForge.EVENT_BUS.addListener(this::onWorldSaved);
+        MinecraftForge.EVENT_BUS.addListener(this::onWorldSaved);
 
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
@@ -42,44 +42,44 @@ public class Chunky {
     public void onWorldLoaded(WorldEvent.Load event) {
 		if (!event.getWorld().isRemote() && event.getWorld() instanceof ServerWorld) {
             ServerWorld world = (ServerWorld) event.getWorld();
+            String dimension = world.getDimensionKey().getLocation().getPath();
 
-            ChunkLoaderPosition.init();
+            ChunkLoaderFile chunkLoaderFile = new ChunkLoaderFile(dimension);
+            chunkLoaderFile.loadFromFile(world);
 
-            for (ChunkCoordinates coordinate : ChunkLoaderPosition.getChunks()) {
-                System.out.format("Loading chunk with x = %d and z = %d\n", coordinate.X, coordinate.Z);
-                world.forceChunk(coordinate.X, coordinate.Z, true);
-            }
+            ChunkLoaderFiles.registerDimension(dimension, chunkLoaderFile);
         }
     }
 
-    // public void onWorldSaved(WorldEvent.Save event) {
-    //     if (!event.getWorld().isRemote() && event.getWorld() instanceof ServerWorld) {
+    public void onWorldSaved(WorldEvent.Save event) {
+        if (!event.getWorld().isRemote() && event.getWorld() instanceof ServerWorld) {
+            LOGGER.info("Saving world");
+            
+            ServerWorld world = (ServerWorld) event.getWorld();
+            String dimension = world.getDimensionKey().getLocation().getPath();
 
-    //     }
-    // }
+            ChunkLoaderFile chunkLoaderFile = ChunkLoaderFiles.getChunkLoaderFile(dimension);
+            chunkLoaderFile.flushQuequeToFile();
+        }
+    }
 
     private void setup(final FMLCommonSetupEvent event) {
         LOGGER.info("Chunky mod setup");
     }
 
-    private void doClientStuff(final FMLClientSetupEvent event) {
-    }
+    private void doClientStuff(final FMLClientSetupEvent event) { }
 
-    private void enqueueIMC(final InterModEnqueueEvent event) {
-    }
+    private void enqueueIMC(final InterModEnqueueEvent event) { }
 
-    private void processIMC(final InterModProcessEvent event) {
-    }
+    private void processIMC(final InterModProcessEvent event) { }
 
     // You can use SubscribeEvent and let the Event Bus discover methods to call
     @SubscribeEvent
-    public void onServerStarting(FMLServerStartingEvent event) {
-    }
+    public void onServerStarting(FMLServerStartingEvent event) { }
 
     // You can use EventBusSubscriber to automatically subscribe events on the
     // contained class (this is subscribing to the MOD
     // Event bus for receiving Registry Events)
     @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
-    public static class RegistryEvents {
-    }
+    public static class RegistryEvents { }
 }
