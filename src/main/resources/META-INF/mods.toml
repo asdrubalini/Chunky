@@ -1,0 +1,18 @@
+modLoader="javafml"
+loaderVersion="[34,)"
+license="MIT"
+
+[[mods]]
+modId="chunky"
+version="${file.jarVersion}"
+displayName="Chunky"
+displayURL="https://github.com/unizLike/Chunky"
+authors="unixLike"
+description="Keep chunk loaded when the player is far or offline from the server."
+
+[[dependencies.examplemod]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[1.16.3]"
+    ordering="NONE"
+    side="BOTH"

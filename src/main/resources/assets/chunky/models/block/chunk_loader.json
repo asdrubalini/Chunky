@@ -1,0 +1,6 @@
+{
+    "parent": "block/cube_all",
+    "textures": {
+        "all": "chunky:blocks/chunk_loader"
+    }
+}
