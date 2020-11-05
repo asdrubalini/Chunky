@@ -42,8 +42,18 @@ public class ChunkLoaderFile {
 
         File chunkFile = getChunkFile();
 
+        if (chunkFile.exists()) {
+            return;
+        }
+
         try {
             chunkFile.createNewFile();
+            FileWriter writer = new FileWriter(chunkFile);
+
+            // Write empty list
+            writer.write("[]");
+
+            writer.close();
         } catch (Exception e) {
             logger.log(Level.SEVERE, String.format("Error while creating chunk file: %s", e));
         }

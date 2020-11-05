@@ -1,0 +1,20 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "xxx",
+        "xax",
+        "xxx"
+    ],
+    "key": {
+        "x": {
+            "item": "minecraft:ender_eye"
+        },
+        "a": {
+            "item": "minecraft:diamond_block"
+        }
+    },
+    "result": {
+        "item": "chunky:chunk_loader",
+        "count": 1
+    }
+}
