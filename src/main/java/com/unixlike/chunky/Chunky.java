@@ -59,7 +59,7 @@ public class Chunky {
             String dimension = world.getDimensionKey().getLocation().getPath();
 
             ChunkLoaderFile chunkLoaderFile = ChunkLoaderFiles.getChunkLoaderFile(dimension);
-            chunkLoaderFile.flushQuequeToFile();
+            chunkLoaderFile.flushQueueToFile();
         }
     }
 

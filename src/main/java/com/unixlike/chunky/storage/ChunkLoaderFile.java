@@ -26,8 +26,8 @@ public class ChunkLoaderFile {
     private static final FolderName FOLDER = new FolderName(Chunky.MOD_ID);
     private static final String CHUNK_FILE_NAME = "chunks.%s.json";
 
-    private List<ChunkCoordinates> addQueque = new ArrayList<>();
-    private List<ChunkCoordinates> removeQueque = new ArrayList<>();
+    private List<ChunkCoordinates> addQueue = new ArrayList<>();
+    private List<ChunkCoordinates> removeQueue = new ArrayList<>();
 
     private static Type coordinatesListType = new TypeToken<List<ChunkCoordinates>>(){}.getType();
 
@@ -71,20 +71,20 @@ public class ChunkLoaderFile {
         return String.format(CHUNK_FILE_NAME, dimension);
     }
 
-    public void addToAddQueque(int chunkX, int chunkZ) {
+    public void addToAddQueue(int chunkX, int chunkZ) {
         ChunkCoordinates coords = new ChunkCoordinates(chunkX, chunkZ);
-        addQueque.add(coords);
+        addQueue.add(coords);
     }
 
-    public void addToRemoveQueque(int chunkX, int chunkZ) {
+    public void addToRemoveQueue(int chunkX, int chunkZ) {
         ChunkCoordinates coords = new ChunkCoordinates(chunkX, chunkZ);
-        removeQueque.add(coords);
+        removeQueue.add(coords);
     }
 
-    public void flushQuequeToFile() {
+    public void flushQueueToFile() {
         List<ChunkCoordinates> chunks = readChunksFromFile();
 
-        for (ChunkCoordinates coords : addQueque) {
+        for (ChunkCoordinates coords : addQueue) {
             if (chunks != null && chunks.contains(coords)) {
                 continue;
             }
@@ -92,7 +92,7 @@ public class ChunkLoaderFile {
             chunks.add(coords);
         }
 
-        for (ChunkCoordinates coords : removeQueque) {
+        for (ChunkCoordinates coords : removeQueue) {
             if (chunks != null && !chunks.contains(coords)) {
                 continue;
             }

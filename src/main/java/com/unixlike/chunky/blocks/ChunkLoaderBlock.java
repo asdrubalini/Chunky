@@ -45,7 +45,7 @@ public class ChunkLoaderBlock extends Block {
 
             String dimension = world.getDimensionKey().getLocation().getPath();
             ChunkLoaderFile chunkLoaderFile = ChunkLoaderFiles.getChunkLoaderFile(dimension);
-            chunkLoaderFile.addToAddQueque(chunkX, chunkZ);
+            chunkLoaderFile.addToAddQueue(chunkX, chunkZ);
 
             logger.info(String.format("Now loading chunk x = %d and z = %d\n", chunkX, chunkZ));
         }
@@ -63,7 +63,7 @@ public class ChunkLoaderBlock extends Block {
 
             String dimension = world.getDimensionKey().getLocation().getPath();
             ChunkLoaderFile chunkLoaderFile = ChunkLoaderFiles.getChunkLoaderFile(dimension);
-            chunkLoaderFile.addToRemoveQueque(chunkX, chunkZ);
+            chunkLoaderFile.addToRemoveQueue(chunkX, chunkZ);
     
             logger.info(String.format("Now unloading chunk x = %d and z = %d\n", chunkX, chunkZ));
         }
