@@ -84,8 +84,15 @@ public class ChunkLoaderFile {
     public void flushQueueToFile() {
         List<ChunkCoordinates> chunks = readChunksFromFile();
 
+        // if (this.dimension == "overworld") {
+            // logger.info(String.format("Chunks before queue: %s", chunks));
+
+            // logger.info(String.format("addQueue: %s", addQueue));
+            // logger.info(String.format("removeQueue: %s", removeQueue));
+        // }
+
         for (ChunkCoordinates coords : addQueue) {
-            if (chunks != null && chunks.contains(coords)) {
+            if (chunks == null || chunks.contains(coords)) {
                 continue;
             }
 
@@ -93,12 +100,20 @@ public class ChunkLoaderFile {
         }
 
         for (ChunkCoordinates coords : removeQueue) {
-            if (chunks != null && !chunks.contains(coords)) {
+            if (chunks == null || !chunks.contains(coords)) {
                 continue;
             }
 
             chunks.remove(coords);
         }
+
+        // Reset add and remove queues
+        addQueue.clear();
+        removeQueue.clear();
+
+        // if (this.dimension == "overworld") {
+            // logger.info(String.format("Chunks after queue: %s", chunks));
+        // }
 
         Gson gson = new Gson();
         File chunkFile = getChunkFile();
